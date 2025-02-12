@@ -94,3 +94,22 @@ To prevent this, use an **anonymous volume**
 ```
 docker run -v data:/app/feedback -v $(pwd):/app -v /app/node_modules
 ```
+
+# Enviroment Variables
+
+Docker supports ARG and ENV
+
+## Overview
+
+| Feature           | `ARG`                                                                | `ENV`                                                                           |
+| ----------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Scope**         | Available only during the build process (Dockerfile)                 | Available during both build and runtime                                         |
+| **Persistence**   | Not present in the final image                                       | Stored in the final image and accessible in containers                          |
+| **Use Case**      | Passing build-time variables (e.g., base image version)              | Defining environment variables for the container (e.g., configuration settings) |
+| **Default Value** | Can have a default but must be passed with `--build-arg` to override | Can be set and overridden at runtime using `docker run -e`                      |
+| **Access**        | Can be accessed in later `RUN` instructions during build             | Can be accessed by applications inside the container                            |
+
+## Key Takeaway:
+
+- Use ARG for build-time configurations.
+- Use ENV for runtime environment variables.
