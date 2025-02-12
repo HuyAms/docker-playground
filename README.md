@@ -46,3 +46,51 @@ RUN npm install
 
 CMD ["node",  "server.js"]
 ```
+
+# Managing data
+
+## Types of data
+
+- **Application code:** env (build) + code (written by devs)
+- **Temporary data:** stored in memory/files. i.e: user's input
+- **Permanent data:** stored in database, must not be lost
+
+## Volume
+
+**Volumes are used to persist data**, ensuring that any data stored within them remains available to the container.
+
+It’s just a folder on the host machine that is mounted to a container, making it accessible from within the container. Any changes made to this folder are reflected inside the container.
+
+There are 2 kinds of volumes
+
+- **anonymous volumes:** attached to a specific container. If we remove the container, the volume is also removed
+- **named volumes:** survive even when we remove the container
+
+To interact with it, we will use the command docker volume
+
+```
+docker run -d -p 3000:80 --rm --name feedback-app -v feedback:/app/feedback data-volume
+```
+
+## Bind mounts
+
+It addresses the issue where changes aren't automatically reflected in Docker without rebuilding the image. It's useful for persistent, editable data, including source code updates.
+
+```
+-v $(pwd):/app
+```
+
+## **When to Use What?**
+
+- **Use Docker Volumes** for **databases, persistent storage, backups**, and when running in production.
+- **Use Bind Mounts** for **local development** when you need to sync files between the container and host system.
+
+## Important Notes
+
+Bind mounts **overwrite container files**, which can cause issues. For example, if `node_modules` exists inside the container but not on the host, it will be lost.
+
+To prevent this, use an **anonymous volume**
+
+```
+docker run -v data:/app/feedback -v $(pwd):/app -v /app/node_modules
+```
