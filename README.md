@@ -113,3 +113,51 @@ Docker supports ARG and ENV
 
 - Use ARG for build-time configurations.
 - Use ENV for runtime environment variables.
+
+# Networking
+
+This project demostrates 3 main types of networking with Docker:
+
+- External (WWW) – Interacting with external APIs
+- Local Machine – Communicating with a local database.
+- Inter-container – Connecting with other Docker containers.
+
+## External (WWW)
+
+Docker allows us to send requests to WWW out of the box 👍
+
+## Local machine
+
+To connect to the local machine, we need to give Docker a hint `host.docker.internal` which refers to our local machine.
+
+Example:
+
+```
+mongodb://host.docker.internal:27017/swfavorites
+```
+
+## Other Containers
+
+Let's say we are creating a separate container for mongodb
+
+```
+docker run --name mongod mongo
+```
+
+We need to inspect the address of the container that runs mongo by using this command
+
+```
+docker inspect mongod
+```
+
+Then look for the ip-adress
+
+```
+"Networks": {
+    "bridge": {
+        "Gateway": "172.17.0.1",
+         👉 "IPAddress": "172.17.0.3",
+        ...
+        }
+}
+```
